@@ -3,8 +3,16 @@
     <title><%= title %></title>
 </head>
 <body>
+    <h1><%= url %></h1>
     <h1><%= title %></h1>
-        
+    <ul>
+        <%data.forEach(function(item){ %>
+            <li>
+                <%= item.shop_name %>
+                <button>删除</button>
+            </li>
+        <%})%>
+    </ul>
     <p>EJS Welcome to <%= content %></p>
     <p>4564</p>
 </body>
