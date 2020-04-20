@@ -1,7 +1,7 @@
 const route = require('koa-router')
 const { query } = require('../mysql/index')
+const {guid} = require('../guid/index')
 let router = new route()
-
 
 async function selectAllData() {
   let sql = 'SELECT * FROM plat_shop_datas'
@@ -23,11 +23,20 @@ async function updata(params){
   return update
 }
 
+async function addInsert(params){
+  let name = params.shop_name
+  console.log(name)
+  let sql = `insert into plat_shop_datas (id,shop_name) values ("${guid()}","${name}")`
+  let addInsert = await query(sql,params)
+  return addInsert
+}
+// 'insert into plat_shop values (id,name,....)'
+
 router.get('/list', async (ctx, next) => {
   let name = []
   await selectAllData().then(res =>{
     res.forEach(item =>{
-      if(item.type===1&&item.total_fee===0){
+      if(item.type===0&&item.total_fee===0){
         name.push(item)
       }
     })
@@ -38,7 +47,7 @@ router.get('/list', async (ctx, next) => {
     }
   }).catch(err =>{
     ctx.body = {
-      code:200,
+      code:500,
       msg:err,
       data:name  
     }
@@ -78,13 +87,56 @@ router.post('/delete_shop',async (ctx,next)=>{
   }
 })
 
+router.post('/add_shop_name',async (ctx,next)=>{
+  let name = ctx.request.body
+  let result = false
+  if(!name.shop_name){
+    ctx.body = {
+      code:200,
+      msg:'不能为空值',
+      state:false
+    }
+    return false
+  }
+  await selectAllData().then(res =>{
+    res.forEach(item =>{
+      if(name.shop_name===item.shop_name){
+        result = true
+      }
+    })
+  })
+  if(result){
+    ctx.body = {
+      code:200,
+      msg:'重复',
+      state:false
+    }
+  }else{
+    await addInsert(name).then(res =>{
+      console.log(res)
+      ctx.body = {
+        code:200,
+        msg:'成功',
+        state:true
+      }
+    }).catch(err =>{
+      console.log(err)
+      ctx.body = {
+        code:500,
+        msg:'错误',
+        state:false
+      }
+    })
+  }
+})
+
 router.post('/updata',async (ctx,next)=>{
   let name = ctx.request.body
   let result = false
   if(!name.shop_name){
     ctx.body = {
       code:200,
-      msg:'空值',
+      msg:'不能为空值',
       state:false
     }
     return false
