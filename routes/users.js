@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-
+const { query } = require('../mysql/index')
 router.prefix('/users')
 
 router.get('/', function (ctx, next) {

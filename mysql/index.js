@@ -8,13 +8,13 @@ const pool = mysql.createPool({
 })
 
 let query = function( sql, values ) {
+  // console.log(values)
   return new Promise(( resolve, reject ) => {
     pool.getConnection(function(err, connection) {
       if (err) {
         reject( err )
       } else {
-        connection.query(sql, values, ( err, rows) => {
-
+        connection.query(sql, ( err, rows) => {
           if ( err ) {
             reject( err )
           } else {

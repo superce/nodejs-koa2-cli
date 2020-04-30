@@ -1,19 +1,15 @@
 <html>
 <head>
-    <title><%= title %></title>
+    <title>88888</title>
 </head>
 <body>
-    <h1><%= url %></h1>
-    <h1><%= title %></h1>
     <ul>
-        <%data.forEach(function(item){ %>
+        <%arr.forEach(function(item){ %>
             <li>
-                <%= item.shop_name %>
-                <button>删除</button>
+                <a href="<%= item.href %>"><%= item.title %></a>                
             </li>
         <%})%>
     </ul>
-    <p>EJS Welcome to <%= content %></p>
     <p>4564</p>
 </body>
 </html>
